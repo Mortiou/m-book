@@ -1,0 +1,185 @@
+import { type NextRequest, NextResponse } from "next/server"
+
+const translations = {
+  en: {
+    common: {
+      loading: "Loading...",
+      error: "An error occurred",
+      success: "Success",
+      cancel: "Cancel",
+      save: "Save",
+      delete: "Delete",
+      edit: "Edit",
+      search: "Search",
+      filter: "Filter",
+      sort: "Sort",
+      next: "Next",
+      previous: "Previous",
+      close: "Close",
+    },
+    navigation: {
+      home: "Home",
+      catalog: "Catalog",
+      library: "My Library",
+      wishlist: "Wishlist",
+      account: "Account",
+      settings: "Settings",
+      help: "Help",
+      logout: "Logout",
+    },
+    books: {
+      title: "Title",
+      author: "Author",
+      price: "Price",
+      rating: "Rating",
+      reviews: "Reviews",
+      pages: "Pages",
+      language: "Language",
+      publisher: "Publisher",
+      publishDate: "Publish Date",
+      addToCart: "Add to Cart",
+      addToWishlist: "Add to Wishlist",
+      readNow: "Read Now",
+      preview: "Preview",
+      download: "Download",
+    },
+    subscription: {
+      plans: "Subscription Plans",
+      monthly: "Monthly",
+      yearly: "Yearly",
+      freeTrial: "Free Trial",
+      subscribe: "Subscribe",
+      cancel: "Cancel Subscription",
+      manage: "Manage Subscription",
+      billing: "Billing",
+      usage: "Usage",
+    },
+  },
+  es: {
+    common: {
+      loading: "Cargando...",
+      error: "Ocurrió un error",
+      success: "Éxito",
+      cancel: "Cancelar",
+      save: "Guardar",
+      delete: "Eliminar",
+      edit: "Editar",
+      search: "Buscar",
+      filter: "Filtrar",
+      sort: "Ordenar",
+      next: "Siguiente",
+      previous: "Anterior",
+      close: "Cerrar",
+    },
+    navigation: {
+      home: "Inicio",
+      catalog: "Catálogo",
+      library: "Mi Biblioteca",
+      wishlist: "Lista de Deseos",
+      account: "Cuenta",
+      settings: "Configuración",
+      help: "Ayuda",
+      logout: "Cerrar Sesión",
+    },
+    books: {
+      title: "Título",
+      author: "Autor",
+      price: "Precio",
+      rating: "Calificación",
+      reviews: "Reseñas",
+      pages: "Páginas",
+      language: "Idioma",
+      publisher: "Editorial",
+      publishDate: "Fecha de Publicación",
+      addToCart: "Agregar al Carrito",
+      addToWishlist: "Agregar a Lista de Deseos",
+      readNow: "Leer Ahora",
+      preview: "Vista Previa",
+      download: "Descargar",
+    },
+    subscription: {
+      plans: "Planes de Suscripción",
+      monthly: "Mensual",
+      yearly: "Anual",
+      freeTrial: "Prueba Gratuita",
+      subscribe: "Suscribirse",
+      cancel: "Cancelar Suscripción",
+      manage: "Gestionar Suscripción",
+      billing: "Facturación",
+      usage: "Uso",
+    },
+  },
+  fr: {
+    common: {
+      loading: "Chargement...",
+      error: "Une erreur s'est produite",
+      success: "Succès",
+      cancel: "Annuler",
+      save: "Enregistrer",
+      delete: "Supprimer",
+      edit: "Modifier",
+      search: "Rechercher",
+      filter: "Filtrer",
+      sort: "Trier",
+      next: "Suivant",
+      previous: "Précédent",
+      close: "Fermer",
+    },
+    navigation: {
+      home: "Accueil",
+      catalog: "Catalogue",
+      library: "Ma Bibliothèque",
+      wishlist: "Liste de Souhaits",
+      account: "Compte",
+      settings: "Paramètres",
+      help: "Aide",
+      logout: "Déconnexion",
+    },
+    books: {
+      title: "Titre",
+      author: "Auteur",
+      price: "Prix",
+      rating: "Note",
+      reviews: "Avis",
+      pages: "Pages",
+      language: "Langue",
+      publisher: "Éditeur",
+      publishDate: "Date de Publication",
+      addToCart: "Ajouter au Panier",
+      addToWishlist: "Ajouter à la Liste de Souhaits",
+      readNow: "Lire Maintenant",
+      preview: "Aperçu",
+      download: "Télécharger",
+    },
+    subscription: {
+      plans: "Plans d'Abonnement",
+      monthly: "Mensuel",
+      yearly: "Annuel",
+      freeTrial: "Essai Gratuit",
+      subscribe: "S'abonner",
+      cancel: "Annuler l'Abonnement",
+      manage: "Gérer l'Abonnement",
+      billing: "Facturation",
+      usage: "Utilisation",
+    },
+  },
+}
+
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url)
+  const lang = searchParams.get("lang") || "en"
+  const namespace = searchParams.get("namespace")
+
+  if (namespace && translations[lang as keyof typeof translations]) {
+    const langTranslations = translations[lang as keyof typeof translations]
+    if (langTranslations[namespace as keyof typeof langTranslations]) {
+      return NextResponse.json({
+        translations: langTranslations[namespace as keyof typeof langTranslations],
+      })
+    }
+  }
+
+  return NextResponse.json({
+    translations: translations[lang as keyof typeof translations] || translations.en,
+  })
+}
